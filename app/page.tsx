@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { createCheckoutSession } from "./actions/checkout";
 import { createClient } from "@supabase/supabase-js";
 
@@ -39,29 +40,34 @@ export default function Home() {
 
 
 async function DonationList() {
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  );
+  // 2. We check if the keys exist. If they don't, we show a message instead of crashing the app.
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-  // Ask the notebook for all donations, newest first
-  const { data: donations } = await supabase
+  if (!supabaseUrl || !supabaseKey) {
+    return <p className="text-gray-500 text-center mt-8 italic">Waiting for database connection...</p>;
+  }
+
+  const supabase = createClient(supabaseUrl, supabaseKey);
+
+  // 3. Fetch data from Supabase
+  const { data: donations, error } = await supabase
     .from('donations')
     .select('*')
     .order('created_at', { ascending: false });
 
-  if (!donations || donations.length === 0) {
+  if (error || !donations || donations.length === 0) {
     return <p className="text-gray-500 text-center mt-8">No donations yet. Be the first!</p>;
   }
 
   return (
-    <div className="mt-12 w-full max-w-md">
-      <h2 className="text-xl font-bold mb-4 text-gray-800">Recent Support</h2>
+    <div className="mt-12 w-full">
+      <h2 className="text-xl font-bold mb-4 text-gray-800 border-b pb-2">Recent Support</h2>
       <div className="space-y-4">
         {donations.map((d) => (
-          <div key={d.id} className="bg-white p-4 rounded-xl shadow-sm border border-orange-100">
+          <div key={d.id} className="bg-white p-4 rounded-xl shadow-sm border border-orange-500/10">
             <p className="font-bold text-orange-900">{d.sender_name} bought a coffee</p>
-            {d.message && <p className="text-gray-600 italic">"{d.message}"</p>}
+            {d.message && <p className="text-gray-600 italic text-sm">"{d.message}"</p>}
           </div>
         ))}
       </div>
