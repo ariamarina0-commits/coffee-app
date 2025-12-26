@@ -3,10 +3,17 @@
 import { getStripe } from "@/lib/stripe";
 import { redirect } from "next/navigation";
 import { createClient } from "@supabase/supabase-js";
+import Stripe from "stripe";
 
 export async function createCheckoutSession(formData: FormData) {
   // 1. SETTINGS - Update this to your actual Vercel URL
   const baseUrl = "https://coffee-app-25.vercel.app"; 
+  let redirectUrl = "";
+
+  // TEMPORARY TEST - Replace process.env with your actual key string
+  const stripe = new Stripe("sk_test_51SiN7N8Xiy0YoJ6NjiAMEySp40PxW10Ztf69Lvd1luG2XR8kudIcLEUmGBtSmMKQyMMdBAYHz1JVhceE19Ymhjrd00UhmOlWiC", {
+    apiVersion: '2025-12-15.clover' as any,
+  });
   
   // 2. DATA EXTRACTION
   const name = formData.get("name") as string || "Anonymous";
