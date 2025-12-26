@@ -9,6 +9,6 @@ export const getStripe = () => {
   }
 
   return new Stripe(key, {
-    apiVersion: '2025-12-15.clover' as any,
+    apiVersion: '2024-12-18.acacia' as any,
   });
 };
