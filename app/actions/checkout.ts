@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 
 export async function createCheckoutSession(formData: FormData) {
   // We use the variable name Vercel expects
-  const stripeKey = process.env.STRIPE_SECRET_KEY;
+  const stripeKey = process.env.STRIPE_SECRET_KEY?.trim();
   
   if (!stripeKey) {
     console.error("STRIPE_SECRET_KEY is missing!");
