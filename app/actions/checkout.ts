@@ -1,36 +1,26 @@
 "use server";
 import Stripe from 'stripe';
 import { redirect } from "next/navigation";
-import { createClient } from "@supabase/supabase-js";
 
 export async function createCheckoutSession(formData: FormData) {
+  // 1. Log to the console so we can see it started in Vercel Logs
+  console.log("CHECKOUT ACTION TRIGGERED");
+
   const stripeKey = process.env.STRIPE_SECRET_KEY?.trim();
-  const stripe = new Stripe(stripeKey!, {
+  
+  if (!stripeKey) {
+    console.error("CRITICAL: STRIPE_SECRET_KEY is missing from Vercel!");
+    throw new Error("Configuration Error");
+  }
+
+  const stripe = new Stripe(stripeKey, {
     apiVersion: '2025-12-15.clover' as any,
   });
 
   let checkoutUrl = "";
 
-  // 1. DATABASE STEP (Wrapped in its own try/catch so it can't kill the Stripe step)
   try {
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-    );
-
-    const name = formData.get("name") as string || "Anonymous";
-    const message = formData.get("message") as string || "";
-
-    await supabase.from('donations').insert([
-      { sender_name: name, message: message, amount: 500 }
-    ]);
-    console.log("DB Insert Successful");
-  } catch (dbError) {
-    console.error("Database failed, but continuing to Stripe:", dbError);
-  }
-
-  // 2. STRIPE STEP
-  try {
+    // We are SKIPPING Supabase for this one test to see if Stripe wakes up
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       line_items: [{
@@ -47,12 +37,13 @@ export async function createCheckoutSession(formData: FormData) {
     });
 
     checkoutUrl = session.url!;
+    console.log("STRIPE SESSION CREATED:", checkoutUrl);
+
   } catch (err: any) {
-    console.error("Stripe Error:", err.message);
+    console.error("STRIPE ERROR:", err.message);
     throw err; 
   }
 
-  // 3. REDIRECT (Must be outside all try/catch blocks)
   if (checkoutUrl) {
     redirect(checkoutUrl);
   }
