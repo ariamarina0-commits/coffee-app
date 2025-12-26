@@ -5,9 +5,6 @@ import { redirect } from "next/navigation";
 import { createClient } from "@supabase/supabase-js";
 import Stripe from "stripe";
 
-export const maxDuration = 30;
-export const runtime = 'nodejs';
-
 export async function createCheckoutSession(formData: FormData) {
   // 1. SETTINGS - Update this to your actual Vercel URL
   const baseUrl = "https://coffee-app-25.vercel.app"; 
