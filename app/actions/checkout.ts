@@ -3,16 +3,10 @@ import Stripe from 'stripe';
 import { redirect } from "next/navigation";
 
 export async function createCheckoutSession(formData: FormData) {
-  // We use the variable name Vercel expects
   const stripeKey = process.env.STRIPE_SECRET_KEY?.trim();
+  const stripe = new Stripe(stripeKey!);
   
-  if (!stripeKey) {
-    console.error("STRIPE_SECRET_KEY is missing!");
-    throw new Error("Key missing");
-  }
-
-  const stripe = new Stripe(stripeKey); 
-  let url = "";
+  let checkoutUrl = ""; // 1. Create a variable to hold the URL
 
   try {
     const session = await stripe.checkout.sessions.create({
@@ -20,24 +14,24 @@ export async function createCheckoutSession(formData: FormData) {
       line_items: [{
         price_data: {
           currency: "usd",
-          product_data: { name: "Coffee Support" },
+          product_data: { name: "Coffee" },
           unit_amount: 500,
         },
         quantity: 1,
       }],
       mode: "payment",
-      // Hardcoded for zero room for error
       success_url: `https://coffee-app-25.vercel.app/success`,
       cancel_url: `https://coffee-app-25.vercel.app/`,
     });
-    
-    url = session.url!;
+
+    checkoutUrl = session.url!; // 2. Assign the URL inside the try block
   } catch (err: any) {
-    console.error("STRIPE API ERROR:", err.message);
-    throw err;
+    console.error("Stripe Error:", err.message);
+    throw err; 
   }
 
-  if (url) {
-    redirect(url);
+  // 3. DO THE REDIRECT HERE (Outside the try/catch)
+  if (checkoutUrl) {
+    redirect(checkoutUrl);
   }
 }
