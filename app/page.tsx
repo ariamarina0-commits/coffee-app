@@ -1,6 +1,6 @@
 export const dynamic = "force-dynamic";
 import { createCheckoutSession } from "./actions/checkout";
-import { createClient } from "@supabase/supabase-js";
+//import { createClient } from "@supabase/supabase-js";
 
 export default async function Home() {
   return (
@@ -39,7 +39,7 @@ export default async function Home() {
 }
 
 
-async function DonationList() {
+/*async function DonationList() {
   // 2. We check if the keys exist. If they don't, we show a message instead of crashing the app.
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -73,4 +73,4 @@ async function DonationList() {
       </div>
     </div>
   );
-}
+}*/
