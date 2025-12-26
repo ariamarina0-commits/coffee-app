@@ -1,47 +1,62 @@
 "use server";
 
-import { getStripe } from "@/lib/stripe"; // Note: we changed this to getStripe
+import { getStripe } from "@/lib/stripe";
 import { redirect } from "next/navigation";
 import { createClient } from "@supabase/supabase-js";
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
-
 export async function createCheckoutSession(formData: FormData) {
-  const name = formData.get("name") as string;
-  const message = formData.get("message") as string;
-  const amount = 5;
+  // 1. SETTINGS - Update this to your actual Vercel URL
+  const baseUrl = "https://coffee-app-25.vercel.app"; 
+  
+  // 2. DATA EXTRACTION
+  const name = formData.get("name") as string || "Anonymous";
+  const message = formData.get("message") as string || "";
+  const amount = 500; // $5.00 in cents
 
-  // 1. Get Stripe safely
-  const stripe = getStripe();
-  if (!stripe) {
-    throw new Error("Stripe is not configured correctly.");
+  try {
+    // 3. DATABASE CHECK
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    );
+
+    const { error: dbError } = await supabase.from('donations').insert([
+      { sender_name: name, message: message, amount: amount }
+    ]);
+
+    if (dbError) throw new Error(`Database Error: ${dbError.message}`);
+
+    // 4. STRIPE CHECK
+    const stripe = getStripe();
+    if (!stripe) throw new Error("Stripe secret key is missing from Vercel settings!");
+
+    // 5. SESSION CREATION
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      line_items: [{
+        price_data: {
+          currency: "usd",
+          product_data: { 
+            name: "Coffee for Creator",
+            description: `From: ${name}`
+          },
+          unit_amount: amount,
+        },
+        quantity: 1,
+      }],
+      mode: "payment",
+      success_url: `${baseUrl}/success`,
+      cancel_url: `${baseUrl}/`,
+    });
+
+    if (!session.url) throw new Error("Stripe failed to generate a redirect URL.");
+
+    // 6. REDIRECT
+    redirect(session.url);
+
+  } catch (error: any) {
+    console.error("CRITICAL ERROR:", error.message);
+    // This sends the specific error back to the Vercel logs
+    throw new Error(`Checkout Failed: ${error.message}`);
   }
-
-  // 2. Save to Supabase
-  await supabase.from('donations').insert([{ 
-    sender_name: name, 
-    message: message, 
-    amount: amount * 100 
-  }]);
-
-  // 3. Create Stripe Session
-  const session = await stripe.checkout.sessions.create({
-    payment_method_types: ["card"],
-    line_items: [{
-      price_data: {
-        currency: "usd",
-        product_data: { name: "Coffee for Creator" },
-        unit_amount: amount * 100,
-      },
-      quantity: 1,
-    }],
-    mode: "payment",
-    success_url: `https://coffee-app-25.vercel.app/success`, // Update this!
-    cancel_url: `https://coffee-app-25.vercel.app/`,
-  });
-
-  redirect(session.url!);
 }
