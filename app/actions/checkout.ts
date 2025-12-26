@@ -1,16 +1,15 @@
 "use server";
+
 import Stripe from 'stripe';
 import { redirect } from "next/navigation";
 
 export async function createCheckoutSession(formData: FormData) {
-  // 1. Log to the console so we can see it started in Vercel Logs
-  console.log("CHECKOUT ACTION TRIGGERED");
-
+  // 1. Move EVERYTHING inside the function
   const stripeKey = process.env.STRIPE_SECRET_KEY?.trim();
   
   if (!stripeKey) {
-    console.error("CRITICAL: STRIPE_SECRET_KEY is missing from Vercel!");
-    throw new Error("Configuration Error");
+    console.error("LOGS: STRIPE_SECRET_KEY IS MISSING");
+    throw new Error("Internal Configuration Error");
   }
 
   const stripe = new Stripe(stripeKey, {
@@ -20,7 +19,6 @@ export async function createCheckoutSession(formData: FormData) {
   let checkoutUrl = "";
 
   try {
-    // We are SKIPPING Supabase for this one test to see if Stripe wakes up
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       line_items: [{
@@ -37,11 +35,9 @@ export async function createCheckoutSession(formData: FormData) {
     });
 
     checkoutUrl = session.url!;
-    console.log("STRIPE SESSION CREATED:", checkoutUrl);
-
   } catch (err: any) {
-    console.error("STRIPE ERROR:", err.message);
-    throw err; 
+    console.error("LOGS: Stripe Error:", err.message);
+    throw err;
   }
 
   if (checkoutUrl) {
