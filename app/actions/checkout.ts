@@ -5,8 +5,8 @@ import { createClient } from "@supabase/supabase-js";
 
 export async function createCheckoutSession(formData: FormData) {
   const stripeKey = process.env.STRIPE_SECRET_KEY?.trim();
-  const stripe = new Stripe(stripeKey!, {
-    apiVersion: '2025-12-15.clover' as any,
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
+    apiVersion: '2024-12-18.acacia' as any,
   });
 
   let checkoutUrl = "";
