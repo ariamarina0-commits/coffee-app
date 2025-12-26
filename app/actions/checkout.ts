@@ -31,7 +31,7 @@ export async function createCheckoutSession(formData: FormData) {
       }],
       mode: "payment",
       success_url: `https://coffee-app-25.vercel.app/success`,
-      cancel_url: `https://coffee-app-25.vercel.app/`,
+      cancel_url: `https://coffee-app-25.vercel.app`,
     });
 
     checkoutUrl = session.url!;

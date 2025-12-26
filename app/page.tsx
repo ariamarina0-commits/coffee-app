@@ -2,7 +2,7 @@ export const dynamic = "force-dynamic";
 import { createCheckoutSession } from "./actions/checkout";
 import { createClient } from "@supabase/supabase-js";
 
-export default function Home() {
+export default async function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-6 bg-[#fff4e6]">
       <div className="w-full max-w-md bg-white p-8 rounded-3xl shadow-2xl border border-orange-100">
@@ -32,7 +32,7 @@ export default function Home() {
             Support $5
           </button>
         </form>
-        <DonationList />
+
       </div>
     </main>
   );
