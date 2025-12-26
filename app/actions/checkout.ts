@@ -12,7 +12,8 @@ export async function createCheckoutSession(formData: FormData) {
 
   // TEMPORARY TEST - Replace process.env with your actual key string
   const stripe = new Stripe("sk_test_51SiN7N8Xiy0YoJ6NjiAMEySp40PxW10Ztf69Lvd1luG2XR8kudIcLEUmGBtSmMKQyMMdBAYHz1JVhceE19Ymhjrd00UhmOlWiC", {
-    apiVersion: '2025-12-15.clover' as any,
+    apiVersion: '2025-12-15.acacia' as any,
+    timeout: 20000,
   });
   
   // 2. DATA EXTRACTION
