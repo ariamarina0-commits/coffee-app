@@ -1,15 +1,35 @@
 "use server";
 import Stripe from 'stripe';
 import { redirect } from "next/navigation";
+import { createClient } from "@supabase/supabase-js";
 
 export async function createCheckoutSession(formData: FormData) {
   const stripeKey = process.env.STRIPE_SECRET_KEY?.trim();
   const stripe = new Stripe(stripeKey!, {
-    apiVersion: '2025-12-15.clover' as any, // Keeping your successful version!
+    apiVersion: '2025-12-15.clover' as any,
   });
 
-  let checkoutUrl = ""; // 1. Create a variable to hold the URL
+  let checkoutUrl = "";
 
+  // 1. DATABASE STEP (Wrapped in its own try/catch so it can't kill the Stripe step)
+  try {
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    );
+
+    const name = formData.get("name") as string || "Anonymous";
+    const message = formData.get("message") as string || "";
+
+    await supabase.from('donations').insert([
+      { sender_name: name, message: message, amount: 500 }
+    ]);
+    console.log("DB Insert Successful");
+  } catch (dbError) {
+    console.error("Database failed, but continuing to Stripe:", dbError);
+  }
+
+  // 2. STRIPE STEP
   try {
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
@@ -26,16 +46,13 @@ export async function createCheckoutSession(formData: FormData) {
       cancel_url: `https://coffee-app-25.vercel.app/`,
     });
 
-    checkoutUrl = session.url!; // 2. Assign the URL inside the try block
-    console.log("Stripe Session Created!");
-
+    checkoutUrl = session.url!;
   } catch (err: any) {
-    console.error("Caught a real error:", err.message);
+    console.error("Stripe Error:", err.message);
     throw err; 
   }
 
-  // 3. DO THE REDIRECT HERE (OUTSIDE THE TRY/CATCH)
-  // This is the only way Next.js can see the redirect correctly
+  // 3. REDIRECT (Must be outside all try/catch blocks)
   if (checkoutUrl) {
     redirect(checkoutUrl);
   }
