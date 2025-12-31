@@ -1,7 +1,7 @@
 export const dynamic = "force-dynamic";
 import { createCheckoutSession } from "./actions/checkout";
 import { createClient } from "@supabase/supabase-js";
-import { DotLottiePlayer } from '@dotlottie/react-player';
+import CoffeeAnimation from "./components/CoffeeAnimation";
 
 export default async function Home() { 
   return (
@@ -21,7 +21,7 @@ export default async function Home() {
               {/* SMALL BUTTON */}
               <button type="submit" name="amount" value="300" className="group flex flex-col items-center p-4 border-2 rounded-3xl hover:border-orange-500 transition-all">
                 <div className="w-16 h-16">
-                  <DotLottiePlayer src="/small-coffee-cup.json" autoplay loop />
+                  <CoffeeAnimation src="/small-coffee-cup.json" size="w-16 h-16" />
                 </div>
                 <span className="font-bold">Small</span>
                 <span className="text-orange-600">€3</span>
@@ -30,7 +30,7 @@ export default async function Home() {
               {/* MEDIUM BUTTON */}
               <button type="submit" name="amount" value="500" className="group flex flex-col items-center p-4 border-2 rounded-3xl border-orange-400 bg-orange-50 scale-105 shadow-md">
                 <div className="w-24 h-24">
-                  <DotLottiePlayer src="/medium-coffee-cup.json" autoplay loop />
+                  <CoffeeAnimation src="/medium-coffee-cup.json" size="w-20 h-20" />
                 </div>
                 <span className="font-bold">Medium</span>
                 <span className="text-orange-600">€5</span>
@@ -39,7 +39,7 @@ export default async function Home() {
               {/* LARGE BUTTON */}
               <button type="submit" name="amount" value="1000" className="group flex flex-col items-center p-4 border-2 rounded-3xl hover:border-orange-500 transition-all">
                 <div className="w-32 h-32">
-                  <DotLottiePlayer src="/large-cup.json" autoplay loop />
+                  <CoffeeAnimation src="/large-cup.json" size="w-24 h-24" />
                 </div>
                 <span className="font-bold">Large</span>
                 <span className="text-orange-600">€10</span>

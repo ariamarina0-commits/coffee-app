@@ -1,6 +1,6 @@
-"use client"; // This is the "magic" line that makes animations work
+"use client";
 
-import { DotLottiePlayer } from '@dotlottie/react-player';
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 
 interface CoffeeProps {
   src: string;
@@ -9,13 +9,11 @@ interface CoffeeProps {
 
 export default function CoffeeAnimation({ src, size }: CoffeeProps) {
   return (
-    /* We wrap it in a div so we can control the size from the main page */
     <div className={`${size} flex items-center justify-center overflow-hidden`}>
-      <DotLottiePlayer
+      <DotLottieReact
         src={src}
-        autoplay
         loop
-        style={{ width: '100%', height: '100%' }}
+        autoplay
       />
     </div>
   );
