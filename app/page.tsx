@@ -8,7 +8,7 @@ export default async function Home() {
     <main className="flex min-h-screen flex-col items-center justify-center p-6 bg-[#fff4e6]">
       <div className="w-full max-w-md bg-white p-8 rounded-3xl shadow-2xl border border-orange-100">
         <div className="text-center mb-8">
-          <CoffeeAnimation src="/Coffee-Love.json" className="w-32 h-32" />
+          <CoffeeAnimation src="/Coffee-love.json" className="w-32 h-32" />
           <h1 className="text-3xl font-black text-gray-800">Buy Me a Coffee</h1>
         </div>
 
@@ -29,7 +29,7 @@ export default async function Home() {
 
               {/* MEDIUM BUTTON */}
               <button type="submit" name="amount" value="500" className="group flex flex-col items-center p-4 border-2 rounded-3xl border-orange-400 bg-orange-50 scale-105 shadow-md">
-                <div className="w-24 h-24">
+                <div className="w-16 h-16">
                   <CoffeeAnimation src="/medium-coffee-cup.json" className="w-16 h-16 transition-transform group-hover:scale-110" />
                 </div>
                 <span className="font-bold">Medium</span>
@@ -38,7 +38,7 @@ export default async function Home() {
 
               {/* LARGE BUTTON */}
               <button type="submit" name="amount" value="1000" className="group flex flex-col items-center p-4 border-2 rounded-3xl hover:border-orange-500 transition-all">
-                <div className="w-32 h-32">
+                <div className="w-16 h-16">
                   <CoffeeAnimation src="/medium-coffee-cup.json" className="w-16 h-16 transition-transform group-hover:scale-110" />
                 </div>
                 <span className="font-bold">Large</span>
