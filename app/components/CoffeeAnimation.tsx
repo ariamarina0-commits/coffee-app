@@ -4,12 +4,12 @@ import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 
 interface CoffeeProps {
   src: string;
-  size: string;
+  className?: string; // Flexible sizing
 }
 
-export default function CoffeeAnimation({ src, size }: CoffeeProps) {
+export default function CoffeeAnimation({ src, className }: CoffeeProps) {
   return (
-    <div className={`${size} flex items-center justify-center overflow-hidden`}>
+    <div className={className}>
       <DotLottieReact
         src={src}
         loop
