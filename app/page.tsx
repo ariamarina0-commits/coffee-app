@@ -14,9 +14,44 @@ export default async function Home() {
         <form action={createCheckoutSession} className="space-y-4">
           <input name="name" type="text" placeholder="Your Name" required className="w-full p-4 rounded-xl border border-gray-200 text-black" />
           <textarea name="message" placeholder="Leave a message..." className="w-full p-4 rounded-xl border border-gray-200 text-black" />
-          <button type="submit" className="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-4 rounded-xl shadow-lg">
-            Support $5
-          </button>
+          // Inside your return() in page.tsx
+          <div className="flex flex-col gap-6 w-full max-w-md">
+            
+            <div className="grid grid-cols-3 gap-4">
+              <button 
+                type="submit" 
+                name="amount" 
+                value="300" 
+                className="flex flex-col items-center p-4 border-2 border-orange-200 rounded-2xl hover:border-orange-500 hover:bg-orange-50 transition-all group"
+              >
+                <span className="text-2xl group-hover:scale-110 transition">☕</span>
+                <span className="font-bold text-gray-700">Small</span>
+                <span className="text-orange-600">$3</span>
+              </button>
+
+              <button 
+                type="submit" 
+                name="amount" 
+                value="500" 
+                className="flex flex-col items-center p-4 border-2 border-orange-500 bg-orange-50 rounded-2xl hover:scale-105 transition-all group"
+              >
+                <span className="text-3xl group-hover:scale-110 transition">☕</span>
+                <span className="font-bold text-gray-700">Medium</span>
+                <span className="text-orange-600">$5</span>
+              </button>
+
+              <button 
+                type="submit" 
+                name="amount" 
+                value="1000" 
+                className="flex flex-col items-center p-4 border-2 border-orange-200 rounded-2xl hover:border-orange-500 hover:bg-orange-50 transition-all group"
+              > 
+                <span className="text-4xl group-hover:scale-110 transition">☕</span>
+                <span className="font-bold text-gray-700">Large</span>
+                <span className="text-orange-600">$10</span>
+              </button>
+            </div>
+          </div>
         </form>
 
         {/* This brings back the list of donors */}

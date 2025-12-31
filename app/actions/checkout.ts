@@ -4,27 +4,40 @@ import { redirect } from "next/navigation";
 import { createClient } from "@supabase/supabase-js";
 
 export async function createCheckoutSession(formData: FormData) {
+  // Use the trimmed key for safety
   const stripeKey = process.env.STRIPE_SECRET_KEY?.trim();
-  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
+  
+  if (!stripeKey) {
+    throw new Error("Stripe Secret Key is missing from environment variables.");
+  }
+
+  const stripe = new Stripe(stripeKey, {
     apiVersion: '2024-12-18.acacia' as any,
   });
 
   let checkoutUrl = "";
 
-  // A. Get form data
+  // A. Get form data (Including the new 'amount' from the buttons)
   const name = formData.get("name") as string || "Anonymous";
   const message = formData.get("message") as string || "";
+  
+  // Get amount and convert to number. If it fails, default to 500 ($5)
+  const amount = Number(formData.get("amount")) || 500;
 
-  // B. DATABASE STEP (Wrapped in its own safety block)
+  // B. DATABASE STEP
   try {
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
     );
 
-    // Save the donation info BEFORE going to Stripe
+    // Save the ACTUAL amount (300, 500, or 1000)
     await supabase.from('donations').insert([
-      { sender_name: name, message: message, amount: 500 }
+      { 
+        sender_name: name, 
+        message: message, 
+        amount: amount 
+      }
     ]);
   } catch (dbError) {
     console.error("Database failed, but moving to Stripe:", dbError);
@@ -37,8 +50,11 @@ export async function createCheckoutSession(formData: FormData) {
       line_items: [{
         price_data: {
           currency: "usd",
-          product_data: { name: `Coffee from ${name}` },
-          unit_amount: 500,
+          product_data: { 
+            name: `Support from ${name}`,
+            description: `A ${amount/100}$ coffee support message: "${message}"`
+          },
+          unit_amount: amount, // Dynamic amount based on button click
         },
         quantity: 1,
       }],
@@ -53,7 +69,7 @@ export async function createCheckoutSession(formData: FormData) {
     throw err; 
   }
 
-  // D. REDIRECT (Keep this outside all brackets!)
+  // D. REDIRECT (Still outside all brackets!)
   if (checkoutUrl) {
     redirect(checkoutUrl);
   }
