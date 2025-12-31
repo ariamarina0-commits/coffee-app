@@ -14,7 +14,6 @@ export default async function Home() {
         <form action={createCheckoutSession} className="space-y-4">
           <input name="name" type="text" placeholder="Your Name" required className="w-full p-4 rounded-xl border border-gray-200 text-black" />
           <textarea name="message" placeholder="Leave a message..." className="w-full p-4 rounded-xl border border-gray-200 text-black" />
-          // Inside your return() in page.tsx
           <div className="flex flex-col gap-6 w-full max-w-md">
             
             <div className="grid grid-cols-3 gap-4">
