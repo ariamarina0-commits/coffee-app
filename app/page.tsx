@@ -1,6 +1,7 @@
 export const dynamic = "force-dynamic";
 import { createCheckoutSession } from "./actions/checkout";
 import { createClient } from "@supabase/supabase-js";
+import { DotLottiePlayer } from '@dotlottie/react-player';
 
 export default async function Home() { 
   return (
@@ -16,37 +17,31 @@ export default async function Home() {
           <textarea name="message" placeholder="Leave a message..." className="w-full p-4 rounded-xl border border-gray-200 text-black" />
           <div className="flex flex-col gap-6 w-full max-w-md">
             
-            <div className="grid grid-cols-3 gap-4">
-              <button 
-                type="submit" 
-                name="amount" 
-                value="300" 
-                className="flex flex-col items-center p-4 border-2 border-orange-200 rounded-2xl hover:border-orange-500 hover:bg-orange-50 transition-all group"
-              >
-                <span className="text-2xl group-hover:scale-110 transition">☕</span>
-                <span className="font-bold text-gray-700">Small</span>
+            <div className="grid grid-cols-3 gap-4 w-full max-w-2xl">
+              {/* SMALL BUTTON */}
+              <button type="submit" name="amount" value="300" className="group flex flex-col items-center p-4 border-2 rounded-3xl hover:border-orange-500 transition-all">
+                <div className="w-16 h-16">
+                  <DotLottiePlayer src="/small-coffee-cup.json" autoplay loop />
+                </div>
+                <span className="font-bold">Small</span>
                 <span className="text-orange-600">€3</span>
               </button>
 
-              <button 
-                type="submit" 
-                name="amount" 
-                value="500" 
-                className="flex flex-col items-center p-4 border-2 border-orange-500 bg-orange-50 rounded-2xl hover:scale-105 transition-all group"
-              >
-                <span className="text-3xl group-hover:scale-110 transition">☕</span>
-                <span className="font-bold text-gray-700">Medium</span>
+              {/* MEDIUM BUTTON */}
+              <button type="submit" name="amount" value="500" className="group flex flex-col items-center p-4 border-2 rounded-3xl border-orange-400 bg-orange-50 scale-105 shadow-md">
+                <div className="w-24 h-24">
+                  <DotLottiePlayer src="/medium-coffee-cup.json" autoplay loop />
+                </div>
+                <span className="font-bold">Medium</span>
                 <span className="text-orange-600">€5</span>
               </button>
 
-              <button 
-                type="submit" 
-                name="amount" 
-                value="1000" 
-                className="flex flex-col items-center p-4 border-2 border-orange-200 rounded-2xl hover:border-orange-500 hover:bg-orange-50 transition-all group"
-              > 
-                <span className="text-4xl group-hover:scale-110 transition">☕</span>
-                <span className="font-bold text-gray-700">Large</span>
+              {/* LARGE BUTTON */}
+              <button type="submit" name="amount" value="1000" className="group flex flex-col items-center p-4 border-2 rounded-3xl hover:border-orange-500 transition-all">
+                <div className="w-32 h-32">
+                  <DotLottiePlayer src="/large-cup.json" autoplay loop />
+                </div>
+                <span className="font-bold">Large</span>
                 <span className="text-orange-600">€10</span>
               </button>
             </div>
