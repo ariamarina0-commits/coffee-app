@@ -49,7 +49,7 @@ export async function createCheckoutSession(formData: FormData) {
       payment_method_types: ["card"],
       line_items: [{
         price_data: {
-          currency: "usd",
+          currency: "eur",
           product_data: { 
             name: `Support from ${name}`,
             description: `A ${amount/100}$ coffee support message: "${message}"`

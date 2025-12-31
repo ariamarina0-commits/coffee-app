@@ -25,7 +25,7 @@ export default async function Home() {
               >
                 <span className="text-2xl group-hover:scale-110 transition">☕</span>
                 <span className="font-bold text-gray-700">Small</span>
-                <span className="text-orange-600">$3</span>
+                <span className="text-orange-600">€3</span>
               </button>
 
               <button 
@@ -36,7 +36,7 @@ export default async function Home() {
               >
                 <span className="text-3xl group-hover:scale-110 transition">☕</span>
                 <span className="font-bold text-gray-700">Medium</span>
-                <span className="text-orange-600">$5</span>
+                <span className="text-orange-600">€5</span>
               </button>
 
               <button 
@@ -47,7 +47,7 @@ export default async function Home() {
               > 
                 <span className="text-4xl group-hover:scale-110 transition">☕</span>
                 <span className="font-bold text-gray-700">Large</span>
-                <span className="text-orange-600">$10</span>
+                <span className="text-orange-600">€10</span>
               </button>
             </div>
           </div>
